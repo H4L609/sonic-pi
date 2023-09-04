@@ -1,1 +1,4 @@
-**/Audio
+**/[Aa]udio
+
+*.wav
+*.mp3
