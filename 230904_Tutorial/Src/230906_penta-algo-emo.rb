@@ -2,6 +2,7 @@
 use_bpm 60
 
 # Hi There!!!!!!!!!!!!!!!!!!
+# Thank you!!!
 
 ## | Base Settings | ##
 root = :C4
@@ -20,14 +21,14 @@ bd_amp  = 0.0 # ミスった――――www
 hat_amp = 0.0
 sn_amp  = 0.0
 
-hmny_amp   = 0.00
-hmny_blend = 0.0 # 0 ~ 1 = harmony1 ~ 2
+hmny_amp   = 0.0
+hmny_blend = 0.3 # 0 ~ 1 = harmony1 ~ 2
 
 mmelo_amp = 0.0
-bitmix    = 0.0
+bitmix    = 0.1
 
 smelo_amp   = 0.0
-smelo_wet   = 0.5
+smelo_wet   = 0.27
 
 ## Not Used
 
@@ -119,7 +120,7 @@ end
 live_loop :sub_melody do
   use_synth :dpulse
   rhythm = [0, 0.5, 0.25, 0.5,0.25, 0.5, 0.25,0.5, 0.25, 0.5, 0.5]
-  rhythm.reverse
+  ##| rhythm.reverse
   ##| rhythm.shuffle
   loop   = 0
   with_fx :panslicer, mix: smelo_wet do
