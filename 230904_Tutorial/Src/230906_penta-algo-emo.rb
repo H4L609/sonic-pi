@@ -16,20 +16,18 @@ melo+= [note1+11.53]
 
 ## | Live Parameter | ##
 
-bd_amp  = 0.3 # ミスった――――www
-hat_amp = 0.5
-sn_amp  = 0.5
+bd_amp  = 0.0 # ミスった――――www
+hat_amp = 0.0
+sn_amp  = 0.0
 
-hmny_amp   = 0.4
-hmny_blend = 0.7 # 0 ~ 1 = harmony1 ~ 2
+hmny_amp   = 0.00
+hmny_blend = 0.0 # 0 ~ 1 = harmony1 ~ 2
 
+mmelo_amp = 0.0
+bitmix    = 0.0
 
-bitmix = 0.7
-mmelo_amp = 0.3
-
-
-smelo_amp   = 0.4
-smelo_wet   = 0.7
+smelo_amp   = 0.0
+smelo_wet   = 0.5
 
 ## Not Used
 
@@ -51,7 +49,7 @@ smelo_wet   = 0.7
 live_loop :bd do
   sample :bd_haus, rate: 1, amp: bd_amp
   if one_in(2)
-    sample :bd_pure, rate: 1*1.059**rrand_i(0,4), amp: bd_amp*2
+    sample :bd_pure, rate: 1*1.059**rrand_i(0,4), amp: bd_amp*1.4
   end
   sleep 0.5
 end
@@ -75,32 +73,34 @@ end
 
 live_loop :harmony_1 do
   with_fx :panslicer, mix: 0.4 do
-    use_synth :tri
-    play chord(root, :M7)+[root+14],   release: rrand(3,4  ) , amp: (1-hmny_blend)*hmny_amp
-    sleep 3.5
-    play chord(note1, :M7)+[note1+14], release: rrand(3,4  ) , amp: (1-hmny_blend)*hmny_amp
-    sleep 1.5
-    play chord(note2, :m7)+[note2+15], release: rrand(3,3.5) , amp: (1-hmny_blend)*hmny_amp
+    use_synth :tb303
+    play chord(root, :M7) +[root+14] , release: rrand(3,4  ) , amp: (1-hmny_blend)*hmny_amp, res: 0.6
     sleep 3
+    play chord(note1, :M7)+[note1+14], release: rrand(3,4  ) , amp: (1-hmny_blend)*hmny_amp, res: 0.6
+    sleep 1
+    play chord(note2, :m7)+[note2+15], release: rrand(1,1.5) , amp: (1-hmny_blend)*hmny_amp, res: 0.6
+    play chord(note2, :m7)+[note2+15], release: rrand(1,1.5) , amp: (1-hmny_blend)*hmny_amp*0.5, attack: 3, res: 0.6
+    sleep 4
   end
 end
 
 live_loop :harmony_2 do
   with_fx :panslicer, mix: 0.4 do
     use_synth :supersaw
-    play chord(root, :M7)+[root+14],   release: rrand(2,2.5), amp: hmny_blend*hmny_amp
-    sleep 3.5
-    play chord(note1, :M7)+[note1+14], release: rrand(1,1.5), amp: hmny_blend*hmny_amp
-    sleep 1.5
-    play chord(note2, :m7)+[note2+15], release: rrand(2,2.5), amp: hmny_blend*hmny_amp
+    play chord(root, :M7)+[root+14],   release: rrand(2.5,3), amp: hmny_blend*hmny_amp
     sleep 3
+    play chord(note1, :M7)+[note1+14], release: rrand(2,2.5), amp: hmny_blend*hmny_amp
+    sleep 1
+    play chord(note2, :m7)+[note2+15], release: rrand(1,1.5), amp: hmny_blend*hmny_amp
+    play chord(note2, :m7)+[note2+15], release: rrand(1,1.5) , amp: (1-hmny_blend)*hmny_amp*0.3, attack: 2
+    sleep 4
   end
 end
 
 live_loop :main_melody do
   use_synth :piano
   with_fx :reverb, mix: 0.4, room: 1 do
-    with_fx :bitcrusher, amp: mmelo_amp, sample_rate: 22000, bits: 4, mix: rrand(0.6,0.9)*bitmix do
+    with_fx :bitcrusher, amp: mmelo_amp, sample_rate: 18000, bits: 4, mix: rrand(0.6,0.9)*bitmix do
       melody_note = choose(melo)
       if one_in(3)
         play [melody_note, melody_note+7+rrand_i(0,1)*5], attack: 0.02, release: 0.8
@@ -117,13 +117,14 @@ live_loop :main_melody do
 end
 
 live_loop :sub_melody do
-  use_synth :beep
+  use_synth :dpulse
   rhythm = [0, 0.5, 0.25, 0.5,0.25, 0.5, 0.25,0.5, 0.25, 0.5, 0.5]
-  rhythm.shuffle
+  rhythm.reverse
+  ##| rhythm.shuffle
   loop   = 0
   with_fx :panslicer, mix: smelo_wet do
     11.times do
-      play melo.shuffle.take(2), release: rrand(0.3, 0.8), amp: smelo_amp
+      play melo.shuffle.take(3), release: rrand(0.3, 0.8), amp: smelo_amp
       sleep rhythm[loop]
       loop+=1
       
